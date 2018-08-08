@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
+<head th:replace="layout/layout :: head">
+</head>
+<body>
+
+	<header th:replace="layout/layout :: header"></header>
+
+	<div class="container main-container">
+	
+		<ul class="list-unstyled">
+			
+			<li class="media">
+				
+				<img th:if="${client.photo != ''}" class="img-thumbnail" width="100px"
+				th:src="@{'/uploads/' + ${client.photo}}" th:alt="${client.photo}">
+				
+				<div class="media-body" style="margin-left: 10px">
+					<span th:inline="text">
+						<h4 class="mt-0 mb-1">[[${client.lastName + ' ' + client.name}]] <small class="text-secondary" th:text="'(' + ${client.createdAt} + ')'"></small></h4> 
+					</span>
+					<p>
+						<label th:text="${client.email}"></label>
+					</p>
+				</div>
+			</li>
+		</ul>
+		
+		<div class="text-right" sec:authorize="hasRole('ROLE_ADMIN')">
+			<a th:href="@{/bill/form/} + ${client.id}" class="btn btn-outline-success">Add bill</a>
+		</div>
+		
+		<div class="alert alert-info" th:if="${client.billList.size() == 0}" style="margin-top: 10px;">
+			The Client [[${client.name + ' ' + client.lastName}]] has not bills
+		</div>
+		
+		<div th:if="${client.billList.size() > 0}">
+		<h5>Billings:</h5>
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th scope="col">#</th>
+					<th scope="col">Description</th>
+					<th scope="col">Date</th>
+					<th scope="col">Amount</th>
+					<th scope="col" sec:authorize="hasRole('ROLE_ADMIN')"></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="bill : ${client.billList}">
+					<td th:text="${bill.id}"></th>
+					<td th:text="${bill.description}"></td>
+					<td th:text="${bill.date}"></td>
+					<td th:text="${#numbers.formatDecimal(bill.totalAmount, 2, 2, 'POINT')}"></td>
+					<td sec:authorize="hasRole('ROLE_ADMIN')">
+						<a th:href="@{'/bill/details/' + ${bill.id}}"> detail</a> &nbsp;
+						<a th:href="@{'/bill/delete/' + ${bill.id}}" class="text-danger"> delete</a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		</div>
+
+		<a th:href="@{'/list'}" th:text="Return"
+					class="btn btn-outline-danger col-md-3"></a>
+	</div>
+	
+	<hr>
+
+	<footer th:replace="layout/layout :: footer"></footer>
+
+</body>
+</html>

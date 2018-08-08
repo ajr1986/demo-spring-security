@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<body>
+
+<script type="text/javascript" th:fragment="javascript">
+
+	$(document).ready(function(){
+		
+		$("#product").autocomplete({
+			
+			source: function(request, response){
+				
+				$.ajax({
+					
+					url: "/bill/load-products/" + request.term,
+					dataType: "json",
+					date: {
+						term: request.term	
+					},
+					success: function(data){
+						response($.map(data, function(item){
+							return {
+								value: item.id,
+								label: item.name,
+								price: item.price
+							}
+						}));
+					},
+				})
+			},
+			select: function(event, ui){
+				
+				$("#product").val("");
+				
+				if(!productHelper.productAlreadySelected(ui.item.value)){
+					
+					var productRow = $("#billItem").html();
+					
+					productRow = productRow.replace(/{ID}/g, ui.item.value);
+					productRow = productRow.replace(/{NAME}/g, ui.item.label);
+					productRow = productRow.replace(/{PRICE}/g, ui.item.price);
+					
+					$("#loadProducts tbody").append(productRow);
+					$("#loadProductsDiv").css({'display': ''});
+					productHelper.calculateAmount(ui.item.value, ui.item.price, 1);
+					
+				} else {
+					
+					productHelper.increaseQuantity(ui.item.value, ui.item.price);
+				}
+				
+				return false;
+			}
+		})
+
+	});
+	
+	var productHelper = {
+			
+			calculateAmount: function(id, price, quantity){
+				$("#total_amount_" + id).html(price * quantity);
+				this.calculateBillTotalAmount();
+			},
+			productAlreadySelected: function(id){
+				
+				var result = false;
+				$("input[name = 'item_id[]']").each(function(){
+					
+					if(id == $(this).val()){
+						result = true;
+					}
+				})
+				
+				return result;
+			},
+			increaseQuantity: function(id, price){
+				
+				var quantity = $("#quantity_" + id).val() ? $("#quantity_" + id).val() : 0;
+				quantity++;
+				$("#quantity_" + id).val(quantity);
+				this.calculateAmount(id, price, quantity);
+			},
+			removeProduct: function(id){
+				
+				$("#row_" + id).remove();
+				this.calculateBillTotalAmount()
+			},
+			calculateBillTotalAmount: function(){
+				
+				var total = 0;
+				
+				$("span[id^='total_amount_']").each(function(){
+					
+					total += parseFloat($(this).html());
+				})
+				
+				$("#billTotalAmount").html(total.toFixed(2));
+			}
+	}
+
+</script>
+
+</body>
+</html>

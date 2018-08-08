@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head th:replace="layout/layout :: head">
+</head>
+<body>
+
+<header th:replace="layout/layout :: header"></header>
+
+	<div class="container main-container">
+
+		<h4>[[${title}]] <small>([[${bill.client.name + ' ' + bill.client.lastName}]])</small></h4>
+		<hr>
+		
+		<div style="margin-top:30px; margin-bottom: 20px">
+			<label><b>Description: </b> [[${bill.description}]]</label>
+			<br>
+			<label><b>Comment: </b> [[${bill.comment}]]</label>
+			<br>
+			<label><b>Date: </b> [[${bill.date}]]</label>
+		</div>
+		
+		<h5>Detail:</h5>
+		<table class="table table-striped" style="margin-top:20px;margin-bottom:30px">
+			<thead>
+				<tr>
+					<th scope="col">Product</th>
+					<th scope="col">Price</th>
+					<th scope="col">Quantity</th>
+					<th scope="col">Amount</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="bi : ${bill.billItemList}">
+					<td th:text="${bi.product.name}"></th>
+					<td th:text="${bi.product.price}"></td>
+					<td th:text="${bi.quantity}"></td>
+					<td th:text="${bi.getAmount()}"></td>
+				</tr>
+			</tbody>
+		</table>
+		
+		<div class="alert alert-danger text-right" role="alert">
+			<b>Total: [[${bill.getTotalAmount()}]]</b>
+		</div>
+		
+		<a th:href="@{'/details/' + ${bill.client.id}}" th:text="Return" class="btn btn-outline-danger col-md-3"></a>
+
+	</div>
+
+<hr>
+<footer th:replace="layout/layout :: footer"></footer>
+
+</body>
+</html>

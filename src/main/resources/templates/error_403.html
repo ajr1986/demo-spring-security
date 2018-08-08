@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
+<head th:replace="layout/layout :: head">
+</head>
+<body>
+
+<header th:replace="layout/layout :: header"></header>
+
+<div class="container main-container">
+
+	<div class="jumbotron bg-white">
+		<h4 class="display-4 text-danger">Access denied</h4>
+		<p class="lead text-danger">User <span sec:authentication="name"></span> has not enough privileges</p>
+		<hr class="my-4">
+		<a class="btn btn-outline-danger" th:href="@{'/'}" role="button">Return</a>
+	</div>
+
+</div>
+
+<hr>
+
+<footer th:replace="layout/layout :: footer"></footer>
+
+</body>
+</html>

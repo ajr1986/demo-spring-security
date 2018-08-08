@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
+<head th:replace="layout/layout :: head">
+</head>
+<body>
+
+	<header th:replace="layout/layout :: header"></header>
+
+	<div class="container main-container">
+
+		<h1 class="text-secondary" th:text="${title}"></h1>
+		<hr>
+
+		<div class="text-right" sec:authorize="hasRole('ROLE_ADMIN')">
+			<a th:href="@{/form}" class="btn btn-outline-success">Add client</a>
+		</div>
+		<br>
+
+		<table class="table">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Last name</th>
+					<th>Email</th>
+					<th>Date</th>
+					<th sec:authorize="hasRole('ROLE_USER')">Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="client: ${clients}">
+					<td th:text="${client.name}"></td>
+					<td th:text="${client.lastName}"></td>
+					<td th:text="${client.email}"></td>
+					<td th:text="${client.createdAt}"></td>
+					<td>
+						<a sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/form/} + ${client.id}">edit</a> &nbsp; 
+						<a sec:authorize="hasRole('ROLE_USER')" th:href="@{/details/} + ${client.id}" class="text-info">details</a> &nbsp;
+						<a sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/delete/} + ${client.id}" class="text-danger">delete</a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<br>
+		<nav th:replace="paginator :: paginator"></nav>
+
+	</div>
+
+	<hr>
+
+	<footer th:replace="layout/layout :: footer"></footer>
+
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head th:replace="layout/layout :: head">
+</head>
+<body>
+
+	<header th:replace="layout/layout :: header"></header>
+
+	<div class="container main-container">
+
+		<h1 class="text-secondary" th:text="${title}"></h1>
+		<hr>
+
+<!-- 		<div th:object="${client}" th:remove="tag"> -->
+
+<!-- 			<ul th:if="${#fields.hasErrors('*')}" class="alert alert-danger" -->
+<!-- 				role="alert"> -->
+<!-- 				<li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li> -->
+<!-- 			</ul> -->
+<!-- 		</div> -->
+
+		<form th:action="@{/form}" th:object="${client}" method="POST" enctype="multipart/form-data">
+
+
+			<div class="form-group">
+				<label>Name:</label> <input type="text" th:field="*{name}"
+					class="form-control" th:errorclass="'form-control is-invalid'" />
+				<small th:if="${#fields.hasErrors('name')}" th:errors="*{name}"
+					class="form-text text-danger"></small>
+			</div>
+
+			<div class="form-group">
+
+				<label>Last name:</label> <input type="text" th:field="*{lastName}"
+					class="form-control" th:errorclass="'form-control is-invalid'" />
+				<small th:if="${#fields.hasErrors('lastName')}"
+					th:errors="*{lastName}" class="form-text text-danger"></small>
+			</div>
+
+			<div class="form-group">
+				<label>Email:</label> <input type="text" th:field="*{email}"
+					class="form-control" th:errorclass="'form-control is-invalid'" />
+				<small th:if="${#fields.hasErrors('email')}" th:errors="*{email}"
+					class="form-text text-danger"></small>
+			</div>
+
+			<div class="form-group">
+				<label>Date:</label> <input type="text" th:field="*{createdAt}"
+					class="form-control" th:errorclass="'form-control is-invalid'" />
+				<small th:if="${#fields.hasErrors('createdAt')}"
+					th:errors="*{createdAt}" class="form-text text-danger"></small>
+			</div>
+			
+			<div class="form-group">
+				<label>Photo:</label> <input type="file" name="file"
+					class="form-control"  />
+			</div>
+
+			<div class="form-group text-center">
+			<a th:href="@{'/list'}" th:text="Cancel" class="btn btn-outline-danger col-md-3"></a>
+				<input type="submit" value="Save"
+					class="btn btn-outline-primary col-md-3" />
+			</div>
+
+		</form>
+
+	</div>
+	
+	<hr>
+	
+	<footer th:replace="layout/layout :: footer"></footer>
+
+</body>
+</html>

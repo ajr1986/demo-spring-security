@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head th:replace="layout/layout :: head">
+</head>
+<body>
+
+	<header th:replace="layout/layout :: header"></header>
+
+
+	<div class="container main-container">
+
+		<h1 class="text-secondary" th:text="${title}"></h1>
+		<hr>
+
+<!-- 		<div th:object="${bill}" th:remove="tag"> -->
+
+<!-- 			<ul th:if="${#fields.hasErrors('*')}" class="alert alert-danger" -->
+<!-- 				role="alert"> -->
+<!-- 				<li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li> -->
+<!-- 			</ul> -->
+<!-- 		</div> -->
+		
+		<table th:replace="bill/bill-item :: bill-item"></table>
+		
+		<form th:action="@{/bill/form}" th:object="${bill}" method="POST">
+		
+			<h5 th:inline="text">Client: <small th:text="${bill.client.name + ' ' + bill.client.lastName}"></small></h5>
+			<br>
+			<div class="form-group">
+				<label>Description:</label> <input type="text" th:field="*{description}" class="form-control" th:errorclass="'form-control is-invalid'" />
+				<small th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="form-text text-danger"></small>
+			</div>
+			
+			<div class="form-group">
+				<label>Comment:</label> 
+				<textarea th:field="*{comment}" class="form-control"></textarea>
+			</div>
+			
+			<div class="form-group">
+				<label>Product:</label> 
+				<input type="text" name="product" id="product" class="form-control" />
+			</div>
+			
+			<br>
+			
+			<div id="loadProductsDiv" class="text-center" style="display:none">
+				<table id="loadProducts" class="table table-sm table-striped table-hover">
+					<thead>
+						<tr>
+							<th>Name</th>
+							<th>Price</th>
+							<th>Quantity</th>
+							<th>Total</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+				<h5>Total: <small id="billTotalAmount">0</small></h5>
+			</div>
+			
+			<br>
+			
+			<div class="form-group text-center">
+				<a th:href="@{'/details/' + ${bill.client.id}}" th:text="Cancel" class="btn btn-outline-danger col-md-3"></a>
+				<input type="submit" value="Save" class="btn btn-outline-primary col-md-3" />
+			</div>
+
+		</form>
+
+	</div>
+
+
+	<footer th:replace="layout/layout :: footer"></footer>
+	
+	<script th:replace="js/autocomplete-product :: javascript"></script>
+
+</body>
+</html>
